@@ -14,6 +14,18 @@
 		A10000000000000000000005 /* DayDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* DayDetailCardView.swift */; };
 		A10000000000000000000006 /* DayEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* DayEditorView.swift */; };
 		A10000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* Assets.xcassets */; };
+		A10000000000000000000008 /* ManagedObject+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* ManagedObject+Helpers.swift */; };
+		A10000000000000000000009 /* CustomItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* CustomItem+CoreDataClass.swift */; };
+		A1000000000000000000000A /* CustomValue+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* CustomValue+CoreDataClass.swift */; };
+		A1000000000000000000000B /* Record+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* Record+CoreDataClass.swift */; };
+		A1000000000000000000000C /* SavedListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000D /* SavedListItem+CoreDataClass.swift */; };
+		A1000000000000000000000D /* CustomItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E /* CustomItem+CoreDataProperties.swift */; };
+		A1000000000000000000000E /* CustomValue+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000F /* CustomValue+CoreDataProperties.swift */; };
+		A1000000000000000000000F /* Record+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* Record+CoreDataProperties.swift */; };
+		A10000000000000000000010 /* CustomItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* CustomItemType.swift */; };
+		A10000000000000000000011 /* DefaultCustomItemsSeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* DefaultCustomItemsSeeder.swift */; };
+		A10000000000000000000012 /* Date+Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000013 /* Date+Calendar.swift */; };
+		A10000000000000000000014 /* SavedListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000014 /* SavedListItem+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +37,18 @@
 		A20000000000000000000006 /* DayEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEditorView.swift; sourceTree = "<group>"; };
 		A20000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A20000000000000000000008 /* LadiCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LadiCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000009 /* ManagedObject+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedObject+Helpers.swift"; sourceTree = "<group>"; };
+		A2000000000000000000000A /* CustomItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A2000000000000000000000B /* CustomValue+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomValue+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A2000000000000000000000C /* Record+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Record+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A2000000000000000000000D /* SavedListItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A2000000000000000000000E /* CustomItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A2000000000000000000000F /* CustomValue+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomValue+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A20000000000000000000010 /* Record+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Record+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A20000000000000000000011 /* CustomItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomItemType.swift; sourceTree = "<group>"; };
+		A20000000000000000000012 /* DefaultCustomItemsSeeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCustomItemsSeeder.swift; sourceTree = "<group>"; };
+		A20000000000000000000013 /* Date+Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Calendar.swift"; sourceTree = "<group>"; };
+		A20000000000000000000014 /* SavedListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +75,9 @@
 			children = (
 				A20000000000000000000001 /* LadiCalApp.swift */,
 				A20000000000000000000002 /* ContentView.swift */,
+				A40000000000000000000006 /* Models */,
 				A40000000000000000000004 /* Persistence */,
+				A40000000000000000000007 /* Support */,
 				A40000000000000000000005 /* Views */,
 				A20000000000000000000007 /* Assets.xcassets */,
 			);
@@ -82,6 +108,32 @@
 				A20000000000000000000006 /* DayEditorView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000006 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000A /* CustomItem+CoreDataClass.swift */,
+				A2000000000000000000000E /* CustomItem+CoreDataProperties.swift */,
+				A2000000000000000000000B /* CustomValue+CoreDataClass.swift */,
+				A2000000000000000000000F /* CustomValue+CoreDataProperties.swift */,
+				A2000000000000000000000C /* Record+CoreDataClass.swift */,
+				A20000000000000000000010 /* Record+CoreDataProperties.swift */,
+				A2000000000000000000000D /* SavedListItem+CoreDataClass.swift */,
+				A20000000000000000000014 /* SavedListItem+CoreDataProperties.swift */,
+				A20000000000000000000009 /* ManagedObject+Helpers.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000007 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000011 /* CustomItemType.swift */,
+				A20000000000000000000012 /* DefaultCustomItemsSeeder.swift */,
+				A20000000000000000000013 /* Date+Calendar.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,10 +212,22 @@
 			files = (
 				A10000000000000000000004 /* CalendarScreen.swift in Sources */,
 				A10000000000000000000002 /* ContentView.swift in Sources */,
+				A10000000000000000000009 /* CustomItem+CoreDataClass.swift in Sources */,
+				A1000000000000000000000D /* CustomItem+CoreDataProperties.swift in Sources */,
+				A10000000000000000000008 /* ManagedObject+Helpers.swift in Sources */,
+				A10000000000000000000010 /* CustomItemType.swift in Sources */,
+				A1000000000000000000000A /* CustomValue+CoreDataClass.swift in Sources */,
+				A1000000000000000000000E /* CustomValue+CoreDataProperties.swift in Sources */,
+				A10000000000000000000012 /* Date+Calendar.swift in Sources */,
 				A10000000000000000000005 /* DayDetailCardView.swift in Sources */,
 				A10000000000000000000006 /* DayEditorView.swift in Sources */,
+				A10000000000000000000011 /* DefaultCustomItemsSeeder.swift in Sources */,
 				A10000000000000000000001 /* LadiCalApp.swift in Sources */,
 				A10000000000000000000003 /* PersistenceController.swift in Sources */,
+				A1000000000000000000000B /* Record+CoreDataClass.swift in Sources */,
+				A1000000000000000000000F /* Record+CoreDataProperties.swift in Sources */,
+				A1000000000000000000000C /* SavedListItem+CoreDataClass.swift in Sources */,
+				A10000000000000000000014 /* SavedListItem+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

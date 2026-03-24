@@ -1,13 +1,20 @@
+import CoreData
 import SwiftUI
 
 struct CalendarScreen: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Record.date, ascending: true)],
+        animation: .default
+    )
+    private var records: FetchedResults<Record>
+
     @State private var displayedMonth = Date()
     @State private var selectedDate = Date()
     @State private var isShowingEditor = false
 
     private let calendar = Calendar.current
     private let weekSymbols = Calendar.current.shortWeekdaySymbols
-    private let sampleEmojis = ["🙂", "💤", "🌙"]
 
     var body: some View {
         NavigationStack {
@@ -18,9 +25,9 @@ struct CalendarScreen: View {
 
                 DayDetailCardView(
                     date: selectedDate,
-                    emojis: sampleEmojis,
-                    note: "ここに選択日のメモ概要を表示します。将来的には記録内容に応じて更新します。",
-                    hasImage: true,
+                    emojis: selectedRecord?.emojiValues.compactMap(\.item?.wrappedEmoji) ?? [],
+                    note: selectedRecord?.note ?? "この日の記録はまだありません。",
+                    hasImage: selectedRecord?.imagePath != nil,
                     onEditTapped: { isShowingEditor = true }
                 )
                 .padding(.top, 8)
@@ -31,8 +38,13 @@ struct CalendarScreen: View {
             .navigationTitle("LadiCal")
             .sheet(isPresented: $isShowingEditor) {
                 DayEditorView(date: selectedDate)
+                    .environment(\.managedObjectContext, viewContext)
             }
         }
+    }
+
+    private var selectedRecord: Record? {
+        record(for: selectedDate)
     }
 
     private var monthHeader: some View {
@@ -90,6 +102,10 @@ struct CalendarScreen: View {
     private func dayCell(for date: Date) -> some View {
         let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
         let isToday = calendar.isDateInToday(date)
+        let record = record(for: date)
+        let dayEmojis = record?.emojiValues.compactMap(\.item?.wrappedEmoji) ?? []
+        let hasNote = !(record?.note ?? "").isEmpty
+        let hasPeriod = record?.toggleValues.contains(where: { $0.item?.wrappedName == "生理" }) ?? false
 
         return Button {
             selectedDate = date
@@ -99,19 +115,22 @@ struct CalendarScreen: View {
                     Text("\(calendar.component(.day, from: date))")
                         .font(.caption.weight(.semibold))
                     Spacer()
-                    Circle()
-                        .fill(.red)
-                        .frame(width: 6, height: 6)
+
+                    if hasNote {
+                        Circle()
+                            .fill(.red)
+                            .frame(width: 6, height: 6)
+                    }
                 }
 
-                Text("🙂 😴")
+                Text(dayEmojis.prefix(2).joined(separator: " "))
                     .font(.caption2)
                     .lineLimit(1)
 
                 Spacer()
 
                 Capsule()
-                    .fill(.red)
+                    .fill(hasPeriod ? .red : .clear)
                     .frame(height: 3)
             }
             .padding(8)
@@ -149,6 +168,18 @@ struct CalendarScreen: View {
 
         return days
     }
+
+    private func record(for date: Date) -> Record? {
+        let start = date.startOfDay(using: calendar)
+        guard let end = calendar.date(byAdding: .day, value: 1, to: start) else {
+            return nil
+        }
+
+        return records.first {
+            guard let recordDate = $0.date else { return false }
+            return recordDate >= start && recordDate < end
+        }
+    }
 }
 
 private struct CalendarDay: Identifiable {
@@ -159,5 +190,6 @@ private struct CalendarDay: Identifiable {
 struct CalendarScreen_Previews: PreviewProvider {
     static var previews: some View {
         CalendarScreen()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
