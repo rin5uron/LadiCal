@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CalendarScreen: View {
     @Environment(\.managedObjectContext) private var viewContext
+    // 保存済み Record を日付順で読み込む。画面はこの結果をそのまま描画する。
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Record.date, ascending: true)],
         animation: .default
@@ -37,6 +38,7 @@ struct CalendarScreen: View {
             .padding()
             .navigationTitle("LadiCal")
             .sheet(isPresented: $isShowingEditor) {
+                // 選択中の日付を編集するシート。
                 DayEditorView(date: selectedDate)
                     .environment(\.managedObjectContext, viewContext)
             }
@@ -44,6 +46,7 @@ struct CalendarScreen: View {
     }
 
     private var selectedRecord: Record? {
+        // カレンダーで選ばれている日の記録を探す。
         record(for: selectedDate)
     }
 
@@ -175,6 +178,7 @@ struct CalendarScreen: View {
             return nil
         }
 
+        // 1日1レコード前提なので、同じ日のものを1件探せば足りる。
         return records.first {
             guard let recordDate = $0.date else { return false }
             return recordDate >= start && recordDate < end

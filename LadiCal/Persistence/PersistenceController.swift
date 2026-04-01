@@ -10,6 +10,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
+        // .xcdatamodeld を使わず、コード上で Core Data モデルを組み立てている。
         container = NSPersistentContainer(name: "LadiCal", managedObjectModel: Self.makeModel())
 
         if inMemory {
@@ -26,6 +27,7 @@ struct PersistenceController {
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 
         do {
+            // 初回起動時に、最低限の絵文字項目とトグル項目を自動投入する。
             try DefaultCustomItemsSeeder.seedIfNeeded(context: container.viewContext)
         } catch {
             assertionFailure("Failed to seed default items: \(error.localizedDescription)")
@@ -35,18 +37,22 @@ struct PersistenceController {
     private static func makeModel() -> NSManagedObjectModel {
         let model = NSManagedObjectModel()
 
+        // Record = 1日分の記録本体
         let record = NSEntityDescription()
         record.name = "Record"
         record.managedObjectClassName = NSStringFromClass(Record.self)
 
+        // CustomItem = 「生理」「頭痛」「🙂」のような入力項目の定義
         let customItem = NSEntityDescription()
         customItem.name = "CustomItem"
         customItem.managedObjectClassName = NSStringFromClass(CustomItem.self)
 
+        // CustomValue = その日のその項目が選ばれた、という保存結果
         let customValue = NSEntityDescription()
         customValue.name = "CustomValue"
         customValue.managedObjectClassName = NSStringFromClass(CustomValue.self)
 
+        // SavedListItem = 一覧に残したいメモだけ別保存する箱
         let savedListItem = NSEntityDescription()
         savedListItem.name = "SavedListItem"
         savedListItem.managedObjectClassName = NSStringFromClass(SavedListItem.self)

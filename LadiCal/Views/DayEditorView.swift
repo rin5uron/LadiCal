@@ -6,6 +6,7 @@ struct DayEditorView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
+    // 設定済みの入力項目を表示順で読み込む。
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \CustomItem.sortOrder, ascending: true)],
         animation: .default
@@ -87,10 +88,12 @@ struct DayEditorView: View {
     }
 
     private var emojiItems: [CustomItem] {
+        // 絵文字として表示する項目だけを抜き出す。
         customItems.filter { $0.isEnabled && $0.wrappedType == .emoji }
     }
 
     private var toggleItems: [CustomItem] {
+        // ON/OFF スイッチとして表示する項目だけを抜き出す。
         customItems.filter { $0.isEnabled && $0.wrappedType == .toggle }
     }
 
@@ -124,6 +127,7 @@ struct DayEditorView: View {
     }
 
     private func loadExistingRecord() {
+        // 既存データがあれば、編集画面を「再編集モード」として埋める。
         guard let record = fetchRecord(for: date) else { return }
 
         note = record.note ?? ""
@@ -132,6 +136,7 @@ struct DayEditorView: View {
     }
 
     private func save() {
+        // その日の Record があれば更新、なければ新規作成する。
         let record = fetchRecord(for: date) ?? Record(context: viewContext)
         let now = Date()
 
@@ -144,6 +149,7 @@ struct DayEditorView: View {
         record.note = note.trimmingCharacters(in: .whitespacesAndNewlines)
         record.updatedAt = now
 
+        // ON の項目だけ保存する方針なので、いったん古い値を消して作り直す。
         record.customValueArray.forEach(viewContext.delete)
 
         customItems.forEach { item in
@@ -169,6 +175,7 @@ struct DayEditorView: View {
     }
 
     private func syncListItem(for record: Record, at date: Date) {
+        // 「リストにも保存する」が ON のときだけ別エンティティを維持する。
         let existingItems = (record.listItems as? Set<SavedListItem> ?? [])
 
         if saveToList {
@@ -195,6 +202,7 @@ struct DayEditorView: View {
         request.fetchLimit = 1
         request.predicate = NSPredicate(format: "date >= %@ AND date < %@", start as NSDate, end as NSDate)
 
+        // 同じ日付の Record を1件だけ探す。
         return try? viewContext.fetch(request).first
     }
 }

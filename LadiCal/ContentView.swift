@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        // いまの実装では、アプリ起動直後にカレンダー画面をそのまま出す。
         CalendarScreen()
     }
 }

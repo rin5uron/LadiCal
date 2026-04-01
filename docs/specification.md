@@ -258,6 +258,12 @@ LadiCal は、完全ローカルで動作する月経周期管理・体調記録
 - SwiftUI
 - Xcode
 - Core Data
+
+## 15. 実装の見方
+
+Swift / SwiftUI / Core Data でこのアプリがどう動いているかは、以下の補助資料を参照する。
+
+- [implementation-overview.md](/Users/rin5uron/github-local/StudioJinsei/LadiCal/docs/implementation-overview.md)
 - UserDefaults
 - CloudKit（iCloud）
 - LocalAuthentication（Face ID）
