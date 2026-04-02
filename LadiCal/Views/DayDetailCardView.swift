@@ -8,7 +8,7 @@ struct DayDetailCardView: View {
     let onEditTapped: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(date.formatted(.dateTime.year().month().day().weekday()))
@@ -16,6 +16,7 @@ struct DayDetailCardView: View {
 
                     Text(emojis.joined(separator: " "))
                         .font(.title2)
+                        .frame(minHeight: 32, alignment: .leading)
                 }
 
                 Spacer()
@@ -28,12 +29,12 @@ struct DayDetailCardView: View {
             Text(note)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .lineLimit(3)
+                .frame(maxWidth: .infinity, minHeight: 160, alignment: .topLeading)
 
             if hasImage {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.secondary.opacity(0.12))
-                    .frame(height: 120)
+                    .frame(height: 140)
                     .overlay {
                         VStack(spacing: 8) {
                             Image(systemName: "photo")
@@ -42,10 +43,11 @@ struct DayDetailCardView: View {
                                 .font(.caption)
                         }
                         .foregroundStyle(.secondary)
-                    }
+                }
             }
         }
-        .padding()
+        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.secondary.opacity(0.08))

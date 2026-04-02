@@ -4,6 +4,7 @@ extension CustomItem {
     var wrappedName: String { name ?? "項目" }
     var wrappedType: CustomItemType { CustomItemType(rawValue: type ?? "") ?? .toggle }
     var wrappedEmoji: String? { emoji }
+    var isPeriodItem: Bool { wrappedName == "生理" }
 
     var customValueArray: [CustomValue] {
         let values = customValues as? Set<CustomValue> ?? []
@@ -27,5 +28,16 @@ extension Record {
 
     var toggleValues: [CustomValue] {
         customValueArray.filter { $0.item?.wrappedType == .toggle }
+    }
+
+    var calendarEmojis: [String] {
+        customValueArray.compactMap { value in
+            guard let item = value.item, !item.isPeriodItem else { return nil }
+            return item.wrappedEmoji
+        }
+    }
+
+    var hasPeriod: Bool {
+        customValueArray.contains { $0.item?.isPeriodItem == true }
     }
 }

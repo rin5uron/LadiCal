@@ -19,24 +19,42 @@ struct CalendarScreen: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                monthHeader
-                weekdayHeader
-                monthGrid
+            VStack(spacing: 12) {
+                headerBar
+
+                ScrollViewReader { proxy in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack(spacing: 18) {
+                            ForEach(visibleMonths, id: \.self) { month in
+                                monthSection(for: month)
+                                    .id(month.startOfMonth(using: calendar))
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .frame(height: 360)
+                    .onAppear {
+                        proxy.scrollTo(displayedMonth.startOfMonth(using: calendar), anchor: .top)
+                    }
+                    .onChange(of: displayedMonth) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            proxy.scrollTo(displayedMonth.startOfMonth(using: calendar), anchor: .top)
+                        }
+                    }
+                }
 
                 DayDetailCardView(
                     date: selectedDate,
-                    emojis: selectedRecord?.emojiValues.compactMap(\.item?.wrappedEmoji) ?? [],
+                    emojis: selectedRecord?.calendarEmojis ?? [],
                     note: selectedRecord?.note ?? "この日の記録はまだありません。",
                     hasImage: selectedRecord?.imagePath != nil,
                     onEditTapped: { isShowingEditor = true }
                 )
-                .padding(.top, 8)
-
-                Spacer(minLength: 0)
+                .frame(maxHeight: .infinity, alignment: .top)
             }
-            .padding()
-            .navigationTitle("LadiCal")
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
             .sheet(isPresented: $isShowingEditor) {
                 // 選択中の日付を編集するシート。
                 DayEditorView(date: selectedDate)
@@ -50,32 +68,34 @@ struct CalendarScreen: View {
         record(for: selectedDate)
     }
 
-    private var monthHeader: some View {
-        HStack {
-            Button {
-                displayedMonth = calendar.date(byAdding: .month, value: -1, to: displayedMonth) ?? displayedMonth
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.headline)
-            }
-
-            Spacer()
-
-            Text(displayedMonth.formatted(.dateTime.year().month(.wide)))
-                .font(.title3.weight(.semibold))
-
-            Spacer()
-
-            Button {
-                displayedMonth = calendar.date(byAdding: .month, value: 1, to: displayedMonth) ?? displayedMonth
-            } label: {
-                Image(systemName: "chevron.right")
-                    .font(.headline)
-            }
+    private var visibleMonths: [Date] {
+        (-12...12).compactMap { offset in
+            calendar.date(byAdding: .month, value: offset, to: Date().startOfMonth(using: calendar))
         }
     }
 
-    private var weekdayHeader: some View {
+    private var headerBar: some View {
+        HStack {
+            Text(displayedMonth.formatted(.dateTime.year().month(.wide)))
+                .font(.title2.weight(.semibold))
+            Spacer()
+
+            DatePicker("", selection: displayedDateBinding, displayedComponents: .date)
+                .labelsHidden()
+                .datePickerStyle(.compact)
+        }
+    }
+
+    private var displayedDateBinding: Binding<Date> {
+        Binding {
+            selectedDate
+        } set: { newDate in
+            selectedDate = newDate
+            displayedMonth = newDate.startOfMonth(using: calendar)
+        }
+    }
+
+    private func weekdayHeader() -> some View {
         HStack {
             ForEach(weekSymbols, id: \.self) { symbol in
                 Text(symbol)
@@ -86,17 +106,27 @@ struct CalendarScreen: View {
         }
     }
 
-    private var monthGrid: some View {
-        let days = makeDaysForMonth(displayedMonth)
+    private func monthSection(for month: Date) -> some View {
+        let days = makeDaysForMonth(month)
 
-        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
-            ForEach(days) { day in
-                if let date = day.date {
-                    dayCell(for: date)
-                } else {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.clear)
-                        .frame(height: 64)
+        return VStack(spacing: 10) {
+            HStack {
+                Text(month.formatted(.dateTime.year().month(.wide)))
+                    .font(.headline)
+                Spacer()
+            }
+
+            weekdayHeader()
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
+                ForEach(days) { day in
+                    if let date = day.date {
+                        dayCell(for: date)
+                    } else {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.clear)
+                            .frame(height: 64)
+                    }
                 }
             }
         }
@@ -106,12 +136,17 @@ struct CalendarScreen: View {
         let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
         let isToday = calendar.isDateInToday(date)
         let record = record(for: date)
-        let dayEmojis = record?.emojiValues.compactMap(\.item?.wrappedEmoji) ?? []
+        let dayEmojis = record?.calendarEmojis ?? []
         let hasNote = !(record?.note ?? "").isEmpty
-        let hasPeriod = record?.toggleValues.contains(where: { $0.item?.wrappedName == "生理" }) ?? false
+        let hasPeriod = record?.hasPeriod ?? false
 
         return Button {
-            selectedDate = date
+            if isSelected {
+                isShowingEditor = true
+            } else {
+                selectedDate = date
+                displayedMonth = date.startOfMonth(using: calendar)
+            }
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
@@ -129,6 +164,7 @@ struct CalendarScreen: View {
                 Text(dayEmojis.prefix(2).joined(separator: " "))
                     .font(.caption2)
                     .lineLimit(1)
+                    .frame(minHeight: 14, alignment: .topLeading)
 
                 Spacer()
 
